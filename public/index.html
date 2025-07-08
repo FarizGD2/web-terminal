@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Web Terminal</title>
+  <style>
+    body {
+      font-family: monospace;
+      background: #111;
+      color: #0f0;
+      margin: 0;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+    h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    #cwdLabel {
+      font-weight: bold;
+      color: #0f0;
+      word-break: break-all;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      background: #222;
+      color: #0f0;
+      border: 1px solid #333;
+      border-radius: 4px;
+    }
+    button {
+      padding: 10px;
+      font-size: 1rem;
+      background-color: #0f0;
+      color: #111;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    #output {
+      margin-top: 20px;
+      background: #222;
+      padding: 10px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      border-radius: 4px;
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <h2>Web Terminal</h2>
+  <form id="commandForm">
+    <label id="cwdLabel"></label>
+    <input type="text" id="command" placeholder="Enter command" autocomplete="off" />
+    <button type="submit">Run</button>
+  </form>
+  <div id="output"></div>
+
+  <script>
+    const form = document.getElementById('commandForm');
+    const outputDiv = document.getElementById('output');
+    const commandInput = document.getElementById('command');
+    const cwdLabel = document.getElementById('cwdLabel');
+
+    let currentCWD = '/';
+
+    function updatePrompt() {
+      cwdLabel.textContent = `${currentCWD} $`;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const command = commandInput.value.trim();
+      if (!command) return;
+
+      const res = await fetch('/run', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ command })
+      });
+
+      const data = await res.json();
+      outputDiv.textContent += `\n${currentCWD} $ ${command}\n${data.output}`;
+      currentCWD = data.cwd;
+      updatePrompt();
+      commandInput.value = '';
+      outputDiv.scrollTop = outputDiv.scrollHeight;
+    });
+
+    updatePrompt();
+  </script>
+</body>
+</html>
