@@ -1,12 +1,14 @@
 {
   "name": "terminal-app",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "api/terminal.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node api/terminal.js",
+    "dev": "node api/terminal.js"
   },
   "dependencies": {
     "express": "^4.18.2",
-    "body-parser": "^1.20.2"
+    "body-parser": "^1.20.2",
+    "serverless-http": "^3.0.2"
   }
 }
