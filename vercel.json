@@ -1,16 +1,13 @@
 {
   "version": 2,
   "builds": [
-    {
-      "src": "server.js",
-      "use": "@vercel/node"
-    }
+    { "src": "api/terminal.js", "use": "@vercel/node" }
   ],
   "routes": [
     {
       "src": "/run",
       "methods": ["POST"],
-      "dest": "server.js"
+      "dest": "/api/terminal.js"
     },
     {
       "src": "/(.*)",
