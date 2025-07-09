@@ -6,7 +6,6 @@
   "routes": [
     {
       "src": "/run",
-      "methods": ["POST"],
       "dest": "/api/terminal.js"
     },
     {
